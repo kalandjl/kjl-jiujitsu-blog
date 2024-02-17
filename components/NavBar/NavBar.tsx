@@ -18,7 +18,7 @@ const NavBar: FC<Props> = (props: Props) => {
                     <div key={i} className="text-black grid place-items-center font-mono">
                         <Link
                         //@ts-ignore
-                        href={`/${pages[page]["href"].toLowerCase()}`}>
+                        href={`${pages[page]["href"].toLowerCase()}`}>
                             <p
                             className="hover:underline hover:cursor-pointer">
                                 {// @ts-ignore
