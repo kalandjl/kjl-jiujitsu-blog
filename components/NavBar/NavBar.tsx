@@ -15,7 +15,6 @@ const NavBar: FC<Props> = (props: Props) => {
     let [current, setCurrent] = useState<string>(path)
 
     useEffect(() => {setCurrent(path)}, [path])
-    console.log(current === "/contact" ? "bg-red-500" : "")
 
     return ( 
         <>
