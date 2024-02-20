@@ -22,6 +22,9 @@ export default function RootLayout({
 
     return (
         <html lang="en">
+        <head>
+          <meta name="google-site-verification" content="JVrd72YgeGKq3soomojEmELHqR31VA4SKqu6RZP43A0" />
+        </head>
         <body style={{backgroundColor: "#E5D3B1"}} className={`${inter.className}`}>
             <main 
             style={{
