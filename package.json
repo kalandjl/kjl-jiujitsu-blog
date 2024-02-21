@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "firebase-functions": "^4.7.0",
+    "google-auth-library": "^9.6.3",
+    "googleapis": "^133.0.0",
     "next": "14.1.0",
     "react": "^18",
     "react-dom": "^18"
