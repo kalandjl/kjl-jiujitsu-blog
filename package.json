@@ -10,6 +10,7 @@
     "git-sync": "git pull && git checkout master -f && git branch --set-upstream-to origin/master"
   },
   "dependencies": {
+    "firebase": "^10.8.0",
     "firebase-functions": "^4.7.0",
     "google-auth-library": "^9.6.3",
     "googleapis": "^133.0.0",

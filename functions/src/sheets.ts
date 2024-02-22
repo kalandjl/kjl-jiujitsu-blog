@@ -1,10 +1,4 @@
-// AIzaSyC62bRMa4ic6CtQxhH49cNoXPclzJi51GQ
-
 const { google } = require('googleapis');
-
-// const sheetId = '1e12hI7NS2p5UpRTGMnkxG3Spgkh63HrXmdToSrqnfQA'
-// const tabName = 'Sheet1'
-// const range = 'A:E'
 
 // Get api client
 export async function _getGoogleSheetClient() {
@@ -23,9 +17,36 @@ export async function _getGoogleSheetClient() {
 export async function _readGoogleSheet(googleSheetClient: any, sheetId: string, tabName: string, range: string) {
     
     const res = await googleSheetClient.spreadsheets.values.get({
-      spreadsheetId: sheetId,
-      range: `${tabName}!${range}`,
+		spreadsheetId: sheetId,
+		range: `${tabName}!${range}`,
     });
   
     return res.data.values;
+}
+
+export async function _updateSessionRow(googleSheetClient: any, sheetId: string, tabName: string, range: string, data: {[x: string]: any}) {
+
+	// const res  = await googleSheetClient.spreadsheets.values.append({
+	// 	spreadsheetId: sheetId,
+	// 	range: `${tabName}!${range}`,
+	// 	valueInputOption: 'USER_ENTERED',
+	// 	insertDataOption: 'INSERT_ROWS',
+	// 	resource: {
+	// 		"majorDimension": "ROWS",
+	// 		"values": data
+	// 	},
+	// })
+
+	const res = await googleSheetClient.spreadsheets.values.update({
+		valueInputOption: "USER_ENTERED",
+		range: `${tabName}!${range}`,
+		spreadsheetId: sheetId,
+		resource: {
+			majorDimension: "ROWS",
+			values: data
+		}
+		
+	})
+
+	return res.data.values
 }
