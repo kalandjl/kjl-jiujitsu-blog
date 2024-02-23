@@ -1,28 +1,33 @@
 "use client"
+import { db, functions } from "@/config/firebase"
 import { addEntryDoc, clearEntriesCollection } from "@/lib/db/test"
+import { addDoc, collection } from "firebase/firestore"
+import { httpsCallable } from "firebase/functions"
 
 const Home = () => {
 
     return (
-       <>
-            <button 
-            onClick={(e) => {
+        <>
+            <div className="grid grid-flow-col gap-2 w-1/2">
+                <button 
+                onClick={(e) => {
 
-                e.preventDefault()
-                addEntryDoc()
-            }}
-            className="border-2 border-black p-2">
-                Add test document
-            </button>
-            <button 
-            onClick={(e) => {
+                    e.preventDefault()
+                    addEntryDoc()
+                }}
+                className="border-2 border-black p-2">
+                    Add test document
+                </button>
+                <button 
+                onClick={async (e) => {
 
-                e.preventDefault()
-                clearEntriesCollection()
-            }}
-            className="border-2 border-black p-2">
-                Clear entries collection
-            </button>
+                    e.preventDefault()
+                    await addDoc(collection(db, "trigger"), {})
+                }}
+                className="border-2 border-black p-2">
+                    Clear entries 
+                </button>
+            </div>
         </>
     )
 }

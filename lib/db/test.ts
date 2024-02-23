@@ -61,7 +61,7 @@ export const clearEntriesCollection = async () => {
     
     docs.forEach((document) => {
         
-        if (document.id === "2TQtZUtRrVm9f2SCsFP3") return
+        if (document.id === "8HVqPh92C74BsQrGhu1L") return
         
         deleteDoc(doc(db, "entries", document.id))
     })

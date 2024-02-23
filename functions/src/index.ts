@@ -6,6 +6,7 @@ const admin = require("firebase-admin")
 admin.initializeApp()
 const db = admin.firestore()
 
+const client = _getGoogleSheetClient()
 const sheetId = "1e12hI7NS2p5UpRTGMnkxG3Spgkh63HrXmdToSrqnfQA"
 
 // When statistics are added
@@ -43,11 +44,11 @@ export const onNewEntry = onDocumentCreated("entries/{docId}", async (event) => 
     try {
 
         // Get api client
-        const client = await _getGoogleSheetClient()
+        const updatedClient = await client
         
         // Update sheets data
         await _updateSessionRow(
-            client, 
+            updatedClient, 
             sheetId, 
             "SUBS FOR", 
             range, 
@@ -55,7 +56,7 @@ export const onNewEntry = onDocumentCreated("entries/{docId}", async (event) => 
         )
 
         await _updateSessionRow(
-            client, 
+            updatedClient, 
             sheetId, 
             "SUBS AGAINST", 
             range, 
@@ -70,3 +71,38 @@ export const onNewEntry = onDocumentCreated("entries/{docId}", async (event) => 
     return val
 })
 
+// Clear stats
+export const onTriggered = onDocumentCreated("trigger/{docId}", async (event) => {
+    
+    const docs = await db.collection("entries").get()
+    const size = docs._size
+
+    docs.forEach((doc: any) => {
+
+        if (doc.id === "8HVqPh92C74BsQrGhu1L") return
+
+        db.collection("entries").doc(doc.id).delete()
+    })
+
+    try {
+
+        const updatedClient = await client
+
+        // For each entry doc clear a row
+        let i = 0
+        Array.from(Array(size - 1)).forEach(async () => {
+
+            i++
+
+            const range = `A${i + 2}:Z${i + 2}`
+
+            const blankArr = Array.from(Array(26)).map(i => "")
+
+            await _updateSessionRow(updatedClient, sheetId, "SUBS FOR", range, [blankArr])
+            await _updateSessionRow(updatedClient, sheetId, "SUBS AGAINST", range, [blankArr])
+        })
+    } catch (e) {
+
+        console.error("ERROR: " + e)
+    }
+})
