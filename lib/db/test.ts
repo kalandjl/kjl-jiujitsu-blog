@@ -10,6 +10,8 @@ export const addEntryDoc = () => {
     addDoc(collection(db, "entries"), {
         date: Timestamp.now(),
         stats: {
+            "fatigue": randomIntFromInterval(1, 10),
+            "rolls": randomIntFromInterval(2, 4),
             "subs": {
                 "for": {
                     "RNC": randomIntFromInterval(8, 10),

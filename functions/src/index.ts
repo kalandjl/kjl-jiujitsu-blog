@@ -8,6 +8,7 @@ const db = admin.firestore()
 
 const client = _getGoogleSheetClient()
 const sheetId = "1e12hI7NS2p5UpRTGMnkxG3Spgkh63HrXmdToSrqnfQA"
+const tabs = ["SUBS FOR", "SUBS AGAINST", "SESSIONS"]
 
 // When statistics are added
 export const onNewEntry = onDocumentCreated("entries/{docId}", async (event) => {
@@ -22,8 +23,7 @@ export const onNewEntry = onDocumentCreated("entries/{docId}", async (event) => 
     // Get number of stats docs to find the correct range to insert rows
     const docs = await db.collection("entries").get()
     const statDocs = docs._size - 1
-    const range = `A${statDocs + 2}:S${statDocs + 2}`
-
+    
     let val 
     const stats = data.stats
     const { subs } = stats
@@ -31,7 +31,13 @@ export const onNewEntry = onDocumentCreated("entries/{docId}", async (event) => 
     // Map objects into arrays
     const subsFor = [[
         id, 
-        new Date(data.date._seconds).toString(), 
+        new Date(data.date._seconds * 1000).toLocaleString("en-us", {    weekday: 'long', // full name of the day
+        year: 'numeric',
+        month: 'long', 
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true }), 
         ...Object.keys(subs.for).map((sub => subs.for[sub].toString()))
     ]]
 
@@ -51,7 +57,7 @@ export const onNewEntry = onDocumentCreated("entries/{docId}", async (event) => 
             updatedClient, 
             sheetId, 
             "SUBS FOR", 
-            range, 
+            `A${statDocs + 2}:S${statDocs + 2}`, 
             subsFor
         )
 
@@ -59,8 +65,16 @@ export const onNewEntry = onDocumentCreated("entries/{docId}", async (event) => 
             updatedClient, 
             sheetId, 
             "SUBS AGAINST", 
-            range, 
+            `A${statDocs + 2}:S${statDocs + 2}`, 
             subsAgainst
+        )
+
+        await _updateSessionRow(
+            updatedClient,
+            sheetId,
+            "SESSIONS",
+            `E${statDocs + 1}:F${statDocs + 1}`,
+            [[stats.fatigue, stats.rolls]]
         )
 
     } catch (e) {
@@ -98,8 +112,14 @@ export const onTriggered = onDocumentCreated("trigger/{docId}", async (event) =>
 
             const blankArr = Array.from(Array(26)).map(i => "")
 
-            await _updateSessionRow(updatedClient, sheetId, "SUBS FOR", range, [blankArr])
-            await _updateSessionRow(updatedClient, sheetId, "SUBS AGAINST", range, [blankArr])
+            tabs.forEach(async (tab) => await _updateSessionRow(
+                updatedClient, 
+                sheetId, 
+                tab, 
+                tab === "SESSIONS" ? `E${i + 1}:F${i + 1}` : range, 
+                tab === "SESSIONS" ? 
+                ["", ""] : [blankArr]
+            ))
         })
     } catch (e) {
 

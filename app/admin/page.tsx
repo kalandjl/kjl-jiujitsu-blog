@@ -28,6 +28,9 @@ const Home = () => {
                     Clear entries 
                 </button>
             </div>
+            <form className="px-6 py-4 bg-orange-200 mt-10">
+                <input type="text" placeholder="title" />
+            </form>
         </>
     )
 }
