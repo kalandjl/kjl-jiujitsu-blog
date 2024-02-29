@@ -9,6 +9,7 @@ export const addEntryDoc = () => {
 
     addDoc(collection(db, "entries"), {
         date: Timestamp.now(),
+        tags: ["gi", "afternoon"],
         stats: {
             "fatigue": randomIntFromInterval(1, 10),
             "rolls": randomIntFromInterval(2, 4),

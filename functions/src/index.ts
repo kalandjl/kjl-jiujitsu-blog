@@ -43,7 +43,7 @@ export const onNewEntry = onDocumentCreated("entries/{docId}", async (event) => 
 
     const subsAgainst = [[
         id, 
-        new Date(data.date._seconds).toString(), 
+        data.date.toDate().toString(), 
         ...Object.keys(subs.against).map((sub => subs.against[sub].toString()))
     ]]
 

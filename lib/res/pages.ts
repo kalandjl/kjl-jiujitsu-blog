@@ -20,8 +20,8 @@ const pages = {
         href: "/progress"
     },
     6: {
-        name: "Sessions", 
-        href: "/sessions"
+        name: "Entries", 
+        href: "/entries"
     },
 }
 
